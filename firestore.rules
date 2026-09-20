@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user is the business owner
+    function isBusinessOwner(businessId) {
+      return isAuthenticated() && (
+        businessId == request.auth.uid ||
+        (exists(/databases/$(database)/documents/businesses/$(businessId)) &&
+         get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerId == request.auth.uid)
+      );
+    }
+
+    match /businesses/{businessId} {
+      // Business profile: only the authenticated owner can read or write
+      allow read: if isAuthenticated() && (
+        businessId == request.auth.uid ||
+        (resource != null && resource.data.ownerId == request.auth.uid)
+      );
+      allow create: if isAuthenticated() && (
+        businessId == request.auth.uid ||
+        request.resource.data.ownerId == request.auth.uid
+      );
+      allow update, delete: if isAuthenticated() && (
+        businessId == request.auth.uid ||
+        (resource != null && resource.data.ownerId == request.auth.uid)
+      );
+
+      // Customers subcollection
+      match /customers/{customerId} {
+        allow read, write: if isBusinessOwner(businessId);
+      }
+
+      // Products subcollection
+      match /products/{productId} {
+        allow read, write: if isBusinessOwner(businessId);
+      }
+
+      // Invoices subcollection
+      match /invoices/{invoiceId} {
+        allow read, write: if isBusinessOwner(businessId);
+        
+        match /items/{itemId} {
+          allow read, write: if isBusinessOwner(businessId);
+        }
+      }
+
+      // Sequential counters for atomic invoice numbering
+      match /counters/{counterId} {
+        allow read, write: if isBusinessOwner(businessId);
+      }
+    }
+  }
+}
+

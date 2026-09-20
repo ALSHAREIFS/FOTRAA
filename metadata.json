@@ -1,0 +1,6 @@
+{
+  "name": "نظام الفوترة الإلكترونية",
+  "description": "منصة فوترة إلكترونية سحابية للمنشآت الصغيرة والمتوسطة تدعم متطلبات الفوترة الإلكترونية (ZATCA)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

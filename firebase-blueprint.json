@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "Business": {
+      "collection": "businesses",
+      "fields": {
+        "id": { "type": "string", "description": "Business ID / Owner UID" },
+        "name": { "type": "string", "description": "اسم المنشأة بالعربي" },
+        "nameEn": { "type": "string", "description": "Business name in English" },
+        "vatNumber": { "type": "string", "description": "الرقم الضريبي المكون من 15 رقم" },
+        "crNumber": { "type": "string", "description": "رقم السجل التجاري" },
+        "address": { "type": "string", "description": "عنوان المنشأة" },
+        "city": { "type": "string", "description": "المدينة" },
+        "phone": { "type": "string", "description": "رقم الهاتف" },
+        "email": { "type": "string", "description": "البريد الإلكتروني للمنشأة" },
+        "logoUrl": { "type": "string", "description": "شعار المنشأة (base64/url)" },
+        "defaultVatRate": { "type": "number", "description": "نسبة الضريبة الافتراضية % (15)" },
+        "invoicePrefix": { "type": "string", "description": "بادئة رقم الفاتورة مثل INV-" },
+        "ownerId": { "type": "string", "description": "Firebase Auth User UID" },
+        "createdAt": { "type": "timestamp", "description": "تاريخ الإنشاء" },
+        "updatedAt": { "type": "timestamp", "description": "تاريخ آخر تعديل" }
+      }
+    },
+    "Customer": {
+      "collection": "businesses/{businessId}/customers",
+      "fields": {
+        "id": { "type": "string", "description": "Customer ID" },
+        "name": { "type": "string", "description": "اسم العميل" },
+        "nameEn": { "type": "string", "description": "Customer name in English" },
+        "phone": { "type": "string", "description": "رقم هاتف العميل" },
+        "email": { "type": "string", "description": "البريد الإلكتروني للعميل" },
+        "vatNumber": { "type": "string", "description": "الرقم الضريبي للعميل (للشركات B2B)" },
+        "address": { "type": "string", "description": "عنوان العميل" },
+        "createdAt": { "type": "timestamp", "description": "تاريخ الإضافة" }
+      }
+    },
+    "Product": {
+      "collection": "businesses/{businessId}/products",
+      "fields": {
+        "id": { "type": "string", "description": "Product ID" },
+        "name": { "type": "string", "description": "اسم المنتج أو الخدمة" },
+        "nameEn": { "type": "string", "description": "Product name in English" },
+        "price": { "type": "number", "description": "سعر الوحدة غير شامل الضريبة" },
+        "unit": { "type": "string", "description": "الوحدة (قطعة، ساعة، خدمة، كجم...)" },
+        "vatRate": { "type": "number", "description": "نسبة الضريبة %" },
+        "category": { "type": "string", "description": "التصنيف" },
+        "createdAt": { "type": "timestamp", "description": "تاريخ الإضافة" }
+      }
+    },
+    "Invoice": {
+      "collection": "businesses/{businessId}/invoices",
+      "fields": {
+        "id": { "type": "string", "description": "Invoice Document ID" },
+        "invoiceNumber": { "type": "string", "description": "رقم تسلسلي فريد للفاتورة مثل INV-2026-0001" },
+        "sequenceNumber": { "type": "number", "description": "الرقم التسلسلي العددي" },
+        "issueDate": { "type": "string", "description": "تاريخ ووقت الإصدار ISO 8601" },
+        "dueDate": { "type": "string", "description": "تاريخ الاستحقاق" },
+        "type": { "type": "string", "description": "simplified (فاتورة ضريبية مبسطة B2C) أو standard (فاتورة ضريبية B2B) أو credit_note أو debit_note" },
+        "status": { "type": "string", "description": "draft (مسودة), issued (مصدرة), cancelled (ملغاة), refunded (مرتجعة)" },
+        "customer": { "type": "map", "description": "بيانات العميل المنسوخة وقت إصدار الفاتورة" },
+        "items": { "type": "array", "description": "قائمة بنود الفاتورة مع الكمية والأسعار والضريبة" },
+        "subtotal": { "type": "number", "description": "المجموع الفرعي الخاضع للضريبة" },
+        "discount": { "type": "number", "description": "مبلغ الخصم الإجمالي إن وجد" },
+        "vatTotal": { "type": "number", "description": "إجمالي ضريبة القيمة المضافة" },
+        "grandTotal": { "type": "number", "description": "المبلغ الإجمالي شامل الضريبة" },
+        "notes": { "type": "string", "description": "ملاحظات الفاتورة أو الشروط والأحكام" },
+        "qrCode": { "type": "string", "description": "ZATCA TLV Base64 String" },
+        "createdAt": { "type": "timestamp", "description": "تاريخ التسجيل في النظام" }
+      }
+    }
+  }
+}
